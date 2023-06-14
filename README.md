@@ -36,4 +36,23 @@ I decided to go with the second approach as it is easier and faster.
 
 Sample data can be found in `listing.json` and `listing.csv`. For amenities ID mapping, refer to `airbnb_scraper --> models --> amenities.py`.
 
-Modify the `PLAYWRIGHT_LAUNCH_OPTIONS = {"headless": False}` to `True` if you want to hide the browser.
+you can also run the following example:
+
+
+```
+scrapy crawl listing \
+    -a cities='["Springdale", "Fayetteville", "Rogers"]' \
+    -a limit=300 \
+    -a state_code="AR" \
+    -a country="United States" \
+    -a items_per_grid="50" \
+    -a max_total_count="10000"
+```
+
+## Parameters
+* `cities`: A list of cities to scrape.
+* `limit`: The maximum number of listings per city.
+* `state_code`: The state where the cities are located.
+* `country`: The country where the cities are located.
+* `items_per_grid`: The number of listings per query in the API.
+* `max_total_count`: The total number of listings retrieved through the API.

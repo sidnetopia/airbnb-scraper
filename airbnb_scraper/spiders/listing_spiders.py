@@ -3,22 +3,30 @@ from urllib.parse import urlencode
 import json
 from airbnb_scraper.items import Listing, Rating
 import re
+from scrapy.utils.project import get_project_settings
 
 class ListingSpiders(scrapy.Spider):
     name = "listing"
 
-    cities = {}
-    state_code = 'AR'
-    country = 'United States'
-    limit = 300
-
-    def __init__(self):
+    def __init__(self, 
+                 cities="Springdale,Fayetteville,Rogers",
+                 state_code="AR", 
+                 country='United States', 
+                 items_per_grid=50,
+                 max_total_count=5000,
+                 limit=300
+                ):
         super().__init__()
-        self.cities = {
-            "Springdale": 0,
-            "Fayetteville": 0,
-            "Rogers": 0
-        }
+
+        self.limit = int(limit)
+        self.state_code = state_code
+        self.country = country
+        self.items_per_grid = int(items_per_grid)
+        self.max_total_count = int(max_total_count)
+        
+        self.cities = {}
+        for city in cities.split(','):
+            self.cities[city] = 0
 
     def start_requests(self):
         """
@@ -173,9 +181,9 @@ class ListingSpiders(scrapy.Spider):
         params = {
             "key": "d306zoyjsyarp7ifhu67rjxn52tv0t20",
             "selected_tab_id": "home_tab",
-            "items_per_grid": 50,
-            "max_total_count": 5000,
-            "query": "{}--{}--{}"
+            "query": "{}--{}--{}",
+            "items_per_grid": self.items_per_grid,
+            "max_total_count": self.max_total_count
         }
         params['query'] = params['query'].format(city, self.state_code, self.country.replace(' ', '-'))
 
